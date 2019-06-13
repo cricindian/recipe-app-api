@@ -37,7 +37,7 @@ class ModelTests(TestCase):
         email = "test@gmail.com"
         password = "test123"
 
-        user = get_user_model().objects.create_super_user(
+        user = get_user_model().objects.create_superuser(
             email,
             password
         )
