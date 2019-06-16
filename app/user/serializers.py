@@ -14,14 +14,31 @@ class UserSerializer(serializers.ModelSerializer):
         """Create a new user with encrypted password and return it"""
         return get_user_model().objects.create_user(**validated_data)
 
+    def update(self, instance, validated_data):
+        """update user, setting up password correctly and return it"""
+        password = validated_data.pop('password', None)
+        user = super().update(instance, validated_data)
+
+        if password:
+            user.set_password(password)
+            user.save()
+        return user
+
 
 class AuthTokenSerializer(serializers.Serializer):
     """Searializers for user auth token"""
+
     email = serializers.CharField()
     password = serializers.CharField(
         style={'input_type': 'password'},
         trim_whitespace={'white_spaces': False}
     )
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
 
     def validate(self, attrs):
         """Validate and authenticate user"""
